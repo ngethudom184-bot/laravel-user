@@ -97,6 +97,11 @@ class UserController extends Controller
                 'profile_picture' => ['nullable', 'file', 'max:255'],
                 'status' => ['nullable', 'in:active,inactive'],
             ]);
+            if(isset($validatedData['password'])) {
+                $validatedData['password'] = Hash::make($validatedData['password']);
+            }else{
+                unset($validatedData['password']);
+            }
             if ($request->hasFile('profile_picture')) {
                 $image = $request->file('profile_picture');
                 $imageName = time() . '_' . $image->getClientOriginalName();
@@ -130,7 +135,7 @@ class UserController extends Controller
                 [
                     'status' => true,
                     'message' => 'User Deleted Successfully'
-                ]
+                ],200
             );
         } else {
             return response()->json(
